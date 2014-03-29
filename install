@@ -1,0 +1,13 @@
+#!/usr/bin/perl
+#
+# This code is distributed under the terms of the GPL
+#
+# (c) 2006-2009 marco.s - http://update-accelerator.advproxy.net
+#
+# $Id: install-updatexlrator-ipcop,v 2.1 2009/08/16 00:00:00 marco.s Exp $
+#
+
+$scriptpath=substr($0,0,rindex($0,"/"));
+
+system("$scriptpath/install.sh -i");
+

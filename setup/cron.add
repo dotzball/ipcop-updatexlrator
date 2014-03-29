@@ -1,0 +1,3 @@
+%daily * *   /var/ipcop/addons/updatexlrator/autocheck/cron.daily
+%weekly  * *   /var/ipcop/addons/updatexlrator/autocheck/cron.weekly
+%monthly * * * /var/ipcop/addons/updatexlrator/autocheck/cron.monthly
