@@ -15,7 +15,7 @@ CMD="$1"
 STEP=1
 UPDATE=0
 
-UPDXLVER=2.2.2
+UPDXLVER=2.3.0
 UPDXLURL=http://blockouttraffic.de/ua_index.php
 HTDOCS="/home/httpd/html"
 HTDOCSVHOST81="/home/httpd/vhost81/html"
