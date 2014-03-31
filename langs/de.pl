@@ -65,4 +65,8 @@
 'updxlrtr progress' => 'Fortschritt',
 'updxlrtr condition suspended' => 'Ausgesetzt',
 'updxlrtr cancel download' => 'Download abbrechen',
+'updxlrtr sort by' => 'Sort by',
+'updxlrtr order' => 'Order',
+'updxlrtr vendor filter' => 'Vendor',
+'updxlrtr status filter' => 'Status',
 );

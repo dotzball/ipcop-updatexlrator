@@ -60,4 +60,8 @@
 'updxlrtr condition unknown' => 'Desconocida',
 'updxlrtr update notification' => 'Notificación de actualización!',
 'updxlrtr update information' => 'Hay, una versión actualizada disponible para descargar. en la web <a href="__URL_UPDATE__" target="_blank">__URL_UPDATE__</a> para mas información.',
+'updxlrtr sort by' => 'Sort by',
+'updxlrtr order' => 'Order',
+'updxlrtr vendor filter' => 'Vendor',
+'updxlrtr status filter' => 'Status',
 );

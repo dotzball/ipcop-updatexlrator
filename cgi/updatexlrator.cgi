@@ -7,7 +7,7 @@
 # Portions (c) 2008 by dotzball - http://www.blockouttraffic.de
 # Portions (c) 2012 by dotzball - http://www.blockouttraffic.de
 #
-# $Id: updatexlrator.cgi,v 2.1.0 2008/07/16 00:00:00 marco.s Exp $
+# $Id: updatexlrator.cgi,v 2.3.0 2014/03/30 00:00:00 marco.s Exp $
 #
 
 # Add entry in menu
@@ -60,6 +60,8 @@ my $filesize=0;
 my $filedate='';
 my $lastaccess='';
 my $lastcheck='';
+my $lastrawaccess='';
+my $lastrawcheck='';
 my $cachedtraffic=0;
 my @requests=();
 my $data='';
@@ -94,6 +96,14 @@ my $chk_cron_dly = "/var/ipcop/addons/updatexlrator/autocheck/cron.daily";
 my $chk_cron_wly = "/var/ipcop/addons/updatexlrator/autocheck/cron.weekly";
 my $chk_cron_mly = "/var/ipcop/addons/updatexlrator/autocheck/cron.monthly";
 
+my @logfilelist		= ();
+my %logsettings		= ();
+my $start = 0;
+my %vendors = ();
+my %statuses = ();
+$logsettings{'LOGVIEW_VIEWSIZE'} = 50;
+&General::readhash('/var/ipcop/logging/settings', \%logsettings);
+
 &General::readhash("/var/ipcop/ethernet/settings", \%netsettings);
 &General::readhash("/var/ipcop/main/settings", \%mainsettings);
 &General::readhash("/var/ipcop/proxy/settings", \%proxysettings);
@@ -113,6 +123,10 @@ $xlratorsettings{'REMOVE_NOSOURCE'} = 'off';
 $xlratorsettings{'REMOVE_OUTDATED'} = 'off';
 $xlratorsettings{'REMOVE_OBSOLETE'} = 'off';
 
+$xlratorsettings{'SORT_BY'} = 'LAST_ACCESS';
+$xlratorsettings{'ORDER'} = 'DESC';
+$xlratorsettings{'FILTER_VENDOR'} = 'ALL';
+$xlratorsettings{'FILTER_STATUS'} = 'ALL';
 
 &General::getcgihash(\%xlratorsettings);
 
@@ -124,8 +138,9 @@ if ($xlratorsettings{'ACTION'} eq "$Lang::tr{'updxlrtr statistics'} >>")
     $xlratorsettings{'EXTENDED_GUI'} = 'statistics';
 }
 
-if ($xlratorsettings{'ACTION'} eq "$Lang::tr{'updxlrtr maintenance'} >>")
+if (($xlratorsettings{'ACTION'} eq "$Lang::tr{'updxlrtr maintenance'} >>") || ($xlratorsettings{'ACTION'} eq "$Lang::tr{'updxlrtr update'}"))
 {
+   
     $xlratorsettings{'EXTENDED_GUI'} = 'maintenance';
 }
 
@@ -327,6 +342,24 @@ if (($xlratorsettings{'ACTION'} eq $Lang::tr{'updxlrtr cancel download'}) || ($x
 
 }
 
+# 2014 - pagination parameter (TODO)
+# my @temp_then = ();
+#if ($ENV{'QUERY_STRING'} && $xlratorsettings{'EXTENDED_GUI'} eq 'maintenance') {
+ #   @temp_then = split(',', $ENV{'QUERY_STRING'});
+  #  #$start                  = $temp_then[0];
+	#$xlratorsettings{'SORT_BY'} = $temp_then[0];
+	#$xlratorsettings{'ORDER'} = $temp_then[1];
+	#$xlratorsettings{'FILTER_VENDOR'} = $temp_then[2];
+	#$xlratorsettings{'ACTION'} = $temp_then[3];	
+#}
+
+my $statusfilter  = $xlratorsettings{'FILTER_STATUS'};
+my $vendorfilter  = $xlratorsettings{'FILTER_VENDOR'};
+my $statusfilterall = $xlratorsettings{'FILTER_STATUS'} eq 'ALL' ? 1 : 0;
+my $vendorfilterall = $xlratorsettings{'FILTER_VENDOR'} eq 'ALL' ? 1 : 0;
+my $sortby = $xlratorsettings{'SORT_BY'};
+my $order = $xlratorsettings{'ORDER'};
+
 $not_accessed_last =  $xlratorsettings{'NOT_ACCESSED_LAST'};
 undef($xlratorsettings{'NOT_ACCESSED_LAST'});
 
@@ -382,6 +415,23 @@ $selected{'NOT_ACCESSED_LAST'}{'month3'} = '';
 $selected{'NOT_ACCESSED_LAST'}{'month6'} = '';
 $selected{'NOT_ACCESSED_LAST'}{'year'} = '';
 $selected{'NOT_ACCESSED_LAST'}{$xlratorsettings{'NOT_ACCESSED_LAST'}} = "selected='selected'";
+
+$selected{'SORT_BY'}{'LAST_ACCESS'} = '';
+$selected{'SORT_BY'}{'LAST_CHECK'} = '';
+$selected{'SORT_BY'}{'VENDOR'} = '';
+$selected{'SORT_BY'}{'DATE'} = '';
+$selected{'SORT_BY'}{'SIZE'} = '';
+$selected{'SORT_BY'}{'STATUS'} = '';
+$selected{'SORT_BY'}{'NAME'} = '';
+$selected{'SORT_BY'}{$sortby} = "selected='selected'";
+
+$selected{'ORDER'}{'ASC'} = '';
+$selected{'ORDER'}{'DESC'} = '';
+$selected{'ORDER'}{$order} = "selected='selected'";
+
+$selected{'FILTER_VENDOR'}{$vendorfilter} = "selected='selected'";
+$selected{'FILTER_STATUS'}{$statusfilter} = "selected='selected'";
+
 
 # ----------------------------------------------------
 #    Settings dialog
@@ -1034,14 +1084,23 @@ foreach (@sources)
     {
         @updatelist = <$_/*>;
         $vendorid = substr($_,rindex($_,"/")+1);
-        foreach(@updatelist)
-        {
-            next if(/\.info$/);
-            $updatefile = substr($_,rindex($_,"/")+1);
-            $updatefile .= ":download/$vendorid/$updatefile";
-            $updatefile = " ".$updatefile;
-            push(@repositoryfiles,$updatefile);
-        }
+		$vendors{$vendorid}++;
+		# 2014 verify filter condition 
+		if (
+			   ((($vendorid eq $vendorfilter) || $vendorfilterall))
+		)	
+		
+        { 
+			
+			foreach(@updatelist)
+			{
+				next if(/\.info$/);
+				$updatefile = substr($_,rindex($_,"/")+1);
+				$updatefile .= ":download/$vendorid/$updatefile";
+				$updatefile = " ".$updatefile;
+				push(@repositoryfiles,$updatefile);
+			}
+		}	
     }
 }
 
@@ -1058,21 +1117,27 @@ foreach (@sources)
 {
     @updatelist=<$_/*>;
     $vendorid = substr($_,rindex($_,"/")+1);
-    foreach(@updatelist)
-    {
-        $uuid = substr($_,rindex($_,"/")+1);
-        if (-e "$_/source.url")
-        {
-            open (FILE,"$_/source.url");
-            $sourceurl=<FILE>;
-            close FILE;
-            chomp($sourceurl);
-            $updatefile = substr($sourceurl,rindex($sourceurl,'/')+1,length($sourceurl));
-            $_ = $updatefile; tr/[A-Z]/[a-z]/;
-            $updatefile = "$_:$vendorid/$uuid/$updatefile";
-            push(@repositoryfiles,$updatefile);
-        }
-    }
+	$vendors{$vendorid}++;
+	# 2014 - verify only vendor condition - at this point we don't have the status yet 
+	if ((($vendorid eq $vendorfilter) || $vendorfilterall))	
+	{
+	    
+		foreach(@updatelist)
+		{
+			$uuid = substr($_,rindex($_,"/")+1);
+			if (-e "$_/source.url")
+			{
+				open (FILE,"$_/source.url");
+				$sourceurl=<FILE>;
+				close FILE;
+				chomp($sourceurl);
+				$updatefile = substr($sourceurl,rindex($sourceurl,'/')+1,length($sourceurl));
+				$_ = $updatefile; tr/[A-Z]/[a-z]/;
+				$updatefile = "$_:$vendorid/$uuid/$updatefile";
+				push(@repositoryfiles,$updatefile);
+			}
+		}
+	}	
 }
 
 @repositoryfiles = sort(@repositoryfiles);
@@ -1122,7 +1187,7 @@ END
 
 if (@repositoryfiles)
 {
-    print <<END
+print <<END
 <hr size='1' />
 <form method='post' action='$ENV{'SCRIPT_NAME'}' enctype='multipart/form-data'>
 <table width='100%'>
@@ -1157,11 +1222,72 @@ if (@repositoryfiles)
 </tr>
 </table>
 </form>
-<hr size='1' />
 END
 ;
 
-    &printcurrentfiles($Lang::tr{'updxlrtr current files'}, @repositoryfiles);
+&Header::closebox();
+&Header::openbox('100%', 'left', "$Lang::tr{'updxlrtr current files'} - $Lang::tr{'updxlrtr sort by'} $sortby");
+
+print <<END
+<form method='post' action='$ENV{'SCRIPT_NAME'}'>
+<table width='100%' border='0'>
+
+<tr>
+	<td  style='width:30%;' class='base'>$Lang::tr{'updxlrtr sort by'}:</td>
+	<td  style='width:15%;'>
+	
+	 <select name='SORT_BY'>
+		<option value='LAST_ACCESS' $selected{'SORT_BY'}{'LAST_ACCESS'}>$Lang::tr{'updxlrtr sort by last access'}</option>
+		<option value='LAST_CHECK' $selected{'SORT_BY'}{'LAST_CHECK'}>$Lang::tr{'updxlrtr sort by last check'}</option>
+		<option value='VENDOR' $selected{'SORT_BY'}{'VENDOR'}>$Lang::tr{'updxlrtr sort by vendor'}</option>
+		<option value='DATE' $selected{'SORT_BY'}{'DATE'}>$Lang::tr{'updxlrtr sort by date'}</option>
+		<option value='SIZE' $selected{'SORT_BY'}{'SIZE'}>$Lang::tr{'updxlrtr sort by size'}</option>
+		<option value='STATUS' $selected{'SORT_BY'}{'STATUS'}>$Lang::tr{'updxlrtr sort by status'}</option>
+		<option value='NAME' $selected{'SORT_BY'}{'NAME'}>$Lang::tr{'updxlrtr sort by name'}</option>
+	 </select>	
+	<td>	
+	<td style='width:30%;' class='base'>$Lang::tr{'updxlrtr order'}:</td>
+	<td style='width:25%;'>
+		<select name='ORDER'>
+		<option value='ASC' $selected{'ORDER'}{'ASC'}>$Lang::tr{'updxlrtr order asc'}</option>
+		<option value='DESC' $selected{'ORDER'}{'DESC'}>$Lang::tr{'updxlrtr order desc'}</option>
+	 </select>	
+	</td>
+</tr>
+<tr>
+    <td  style='width:30%;' class='base'>$Lang::tr{'updxlrtr sort by vendor'}:</td>
+	<td  style='width:15%;'>
+	<select name='FILTER_VENDOR'>
+	<option value='ALL' $selected{'FILTER_VENDOR'}{'ALL'}>$Lang::tr{'caps all'}</option>
+END
+    ;
+foreach my $vendor (keys %vendors) {
+    if ($vendor) {
+	    if (!$selected{'FILTER_VENDOR'}{$vendor}) {
+		 $selected{'FILTER_VENDOR'}{$vendor} = '';
+		}
+		print "<option value='$vendor' $selected{'FILTER_VENDOR'}{$vendor}>$vendor</option>\n";
+	}
+}
+print <<END
+	</select>
+	</td>
+	<td style='width:30%;' class='base'></td>
+	<td style='width:25%;'></td>
+</tr>
+<tr>
+ <td colspan="4">
+	<input type='submit' name='ACTION' value='$Lang::tr{'updxlrtr update'}'>
+ </td>
+</table>
+
+<hr />
+</form>
+
+END
+;
+	
+    &printcurrentfiles("$sortby", "$order", @repositoryfiles);
     print "<br>\n<table>\n";
     &printlegendicons();
     &printlegendspacer();
@@ -1185,13 +1311,15 @@ END
 
 sub printcurrentfiles
 {
-    my $title = shift;
+    #my $title = shift;
+	my $sortby = shift;
+	my $order = shift;
     my @files = @_;
-
+	#my $sortby = $xlratorsettings{'SORT_BY'};
+	#my $order = $xlratorsettings{'ORDER'};
+	
     print <<END
-<table>
-<tr><td class='boldbase'><b>$title</b></td></tr>
-</table>
+
 <table width='100%'>
 <colgroup span='2' width='2%'></colgroup>
 <colgroup span='1' width='0*'></colgroup>
@@ -1200,9 +1328,9 @@ sub printcurrentfiles
 <tr>
     <td class='base' align='center'>&nbsp;</td>
     <td class='base' align='center'>&nbsp;</td>
-    <td class='base' align='center'><i>$Lang::tr{'updxlrtr filename'}</i></td>
-    <td class='base' align='center'><i>$Lang::tr{'updxlrtr filesize'}</i></td>
-    <td class='base' align='center'><i>$Lang::tr{'date'}</i></td>
+    <td class='base' align='center'><b>$Lang::tr{'updxlrtr filename'}</b></td>
+    <td class='base' align='center'><b>$Lang::tr{'updxlrtr filesize'}</b></td>
+    <td class='base' align='center'><b>$Lang::tr{'date'}</b></td>
     <td class='base' align='center'><img src='/images/reload.gif' alt='$Lang::tr{'updxlrtr last access'}' /></td>
     <td class='base' align='center'><img src='/images/updxl-globe.gif' alt='$Lang::tr{'updxlrtr last checkup'}' /></td>
     <td class='base' align='center'>&nbsp;</td>
@@ -1220,11 +1348,7 @@ END
             $mtime = &getmtime("$UPDXLT::repository/$updatefile");
         }
 
-        $id++;
-        if ($id % 2) {
-            print "<tr class='table1colour'>\n"; }
-        else {
-            print "<tr class='table2colour'>\n"; }
+       
 
         $filesize = $size_updatefile;
         1 while $filesize =~ s/^(-?\d+)(\d{3})/$1.$2/;
@@ -1237,6 +1361,8 @@ END
 
         $lastaccess = "n/a";
         $lastcheck  = "n/a";
+		$lastrawaccess = 0;
+        $lastrawcheck  = 0;
 
         $status = $sfUnknown;
 
@@ -1255,7 +1381,7 @@ END
                 $DAYdt   = sprintf ("%.02d",$DAYdt);
                 $MONTHdt = sprintf ("%.02d",$MONTHdt+1);
                 $YEARdt  = sprintf ("%.04d",$YEARdt+1900);
-                if (($metadata[-1] =~ /^\d+/) && ($metadata[-1] >= 1)) { $lastaccess = $YEARdt."-".$MONTHdt."-".$DAYdt; }
+                if (($metadata[-1] =~ /^\d+/) && ($metadata[-1] >= 1)) { $lastaccess = $YEARdt."-".$MONTHdt."-".$DAYdt; $lastrawaccess = $metadata[-1];}
             }
             if (-e "$UPDXLT::repository/$vendorid/$uuid/checkup.log")
             {
@@ -1268,7 +1394,7 @@ END
                 $DAYdt   = sprintf ("%.02d",$DAYdt);
                 $MONTHdt = sprintf ("%.02d",$MONTHdt+1);
                 $YEARdt  = sprintf ("%.04d",$YEARdt+1900);
-                if (($metadata[-1] =~ /^\d+/) && ($metadata[-1] >= 1)) { $lastcheck = $YEARdt."-".$MONTHdt."-".$DAYdt; }
+                if (($metadata[-1] =~ /^\d+/) && ($metadata[-1] >= 1)) { $lastcheck = $YEARdt."-".$MONTHdt."-".$DAYdt; $lastrawcheck = $metadata[-1]; }
             }
             if (-e "$UPDXLT::repository/$vendorid/$uuid/status")
             {
@@ -1282,7 +1408,42 @@ END
             ($uuid,$vendorid,$shortname) = split('/',$updatefile);
             $status = $sfOutdated;
         }
-
+		
+		push(@logfilelist, "$status $vendorid $updatefile $filesize $filedate $lastaccess $lastcheck $lastrawaccess $lastrawcheck $size_updatefile");
+	}
+	
+	# 2014 - sort entry by user preferences
+	if ($sortby eq 'LAST_ACCESS') {
+	  @logfilelist = sort { (split ' ', $a)[7] <=> (split ' ', $b)[7] } @logfilelist;	
+	} 
+	elsif ($sortby eq 'LAST_CHECK') {
+	  @logfilelist = sort { (split ' ', $a)[8] <=> (split ' ', $b)[8] } @logfilelist;	
+	} 
+	elsif ($sortby eq 'SIZE') {
+	  @logfilelist = sort { (split ' ', $a)[9] <=> (split ' ', $b)[9] } @logfilelist;	
+	}
+	elsif ($sortby eq 'DATE') {
+	  @logfilelist = sort { (split ' ', $a)[4] cmp (split ' ', $b)[4] } @logfilelist;	
+	}
+	elsif ($sortby eq 'VENDOR') {
+	  @logfilelist = sort { (split ' ', $a)[1] cmp (split ' ', $b)[1] } @logfilelist;	
+	}
+	elsif ($sortby eq 'NAME') {
+	  @logfilelist = sort { (split ' ', $a)[2] cmp (split ' ', $b)[2] } @logfilelist;	
+	}
+	elsif ($sortby eq 'STATUS') {
+	  @logfilelist = sort { (split ' ', $a)[0] cmp (split ' ', $b)[0] } @logfilelist;	
+	}
+	
+	if ($order eq 'DESC') { @logfilelist = reverse @logfilelist; }
+	
+	foreach $_ (@logfilelist) {
+        my ($status, $vendorid, $updatefile, $filesize, $filedate, $lastaccess, $lastcheck) = split;
+		 $id++;
+        if ($id % 2) {
+            print "<tr class='table1colour'>\n"; }
+        else {
+            print "<tr class='table2colour'>\n"; }
         print "\t\t<td align='center' nowrap='nowrap'>&nbsp;";
         if ($status == $sfUnknown)
         {
