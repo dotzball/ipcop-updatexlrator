@@ -60,4 +60,8 @@
 'updxlrtr condition unknown' => 'Sconosciuto',
 'updxlrtr update notification' => 'Notifica update!',
 'updxlrtr update information' => 'Esiste una versione aggiornata disponibile per il download. Per maggiori informazioni visita <a href="__URL_UPDATE__" target="_blank">__URL_UPDATE__</a>.',
+'updxlrtr sort by' => 'Ordina per',
+'updxlrtr order' => 'Ordine',
+'updxlrtr vendor filter' => 'Produttore',
+'updxlrtr status filter' => 'Stato',
 );
