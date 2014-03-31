@@ -7,7 +7,7 @@
 # Portions (c) 2008 by dotzball - http://www.blockouttraffic.de
 # Portions (c) 2012 by dotzball - http://www.blockouttraffic.de
 #
-# $Id: updxlrator,v 2.1 2009/08/16 00:00:00 marco.s Exp $
+# $Id: updxlrator,v 2.3 2014/03/30 00:00:00 marco.s Exp $
 #
 
 use strict;
@@ -64,7 +64,9 @@ while (<>) {
     chomp(@tmp);
 
     $source_url = $tmp[0];
-    $hostaddr   = $tmp[1]; while ($hostaddr =~ /.*\/$/) { chop $hostaddr; }
+    $hostaddr   = $tmp[1]; 
+	&debuglog("Analyzing request from host: $tmp[1] - url: $source_url");
+	while ($hostaddr =~ /.*\/$/) { chop $hostaddr; }
     $username   = $tmp[2]; if ($username eq '') { $username='-'; };
     $method     = $tmp[3];
 
@@ -134,12 +136,31 @@ while (<>) {
     }
 
     # -----------------------------------------------------------
+    #  Section: Mozilla Downloads
+    # -----------------------------------------------------------
+
+    if ($source_url =~ m@^[h|f]tt?p://[^/]*\.mozilla\.org/.*\.(exe|zip|tar)$@i)
+    {
+        $xlrator_url = &check_cache($source_url,$hostaddr,$username,"Other",$unique);
+    }
+
+    # -----------------------------------------------------------
+    #  Section: NVIDIA Downloads
+    # -----------------------------------------------------------
+
+    if ($source_url =~ m@^http://[^/]+\.download.nvidia.com/.*\.(exe|zip)$@i)     {
+        $xlrator_url = &check_cache($source_url,$hostaddr,$username,"Other",$unique);
+    }
+
+
+    # -----------------------------------------------------------
     #  Section: Apple Downloads
     # -----------------------------------------------------------
 
     if (
         (($source_url =~ m@^http://swcdn\.apple\.com/content/downloads/.*\.(tar|pkg)$@i) ||
          ($source_url =~ m@^http://appldnld\.apple\.com\.edgesuite\.net/.*\.(exe|dmg)$@i) ||
+	  ($source_url =~ m@^[h|f]tt?p://[^/]*\.apple\.com/.*\.(pfpkg|tar|pkg|dmg|exe)$@i) ||
          ($source_url =~ m@^http://.*\.g.akamai.net/.*/3093/1/.*\.(tar|pkg|dmg|exe)$@i))
        )
     {
@@ -150,10 +171,23 @@ while (<>) {
     #  Section: Avast Downloads
     # -----------------------------------------------------------
 
-    if ($source_url =~ m@^http://download[\d]+\.avast\.com/.*\.(exe|vpu)$@i)
+    if ($source_url =~ m@^http://download[\d]*\.avast\.com/.*\.(exe|vpu)$@i)
     {
         $xlrator_url = &check_cache($source_url,$hostaddr,$username,"Avast",$mirror);
     }
+
+
+    # -----------------------------------------------------------
+    #  Section: Java  Downloads
+    # -----------------------------------------------------------
+
+    if (($source_url =~ m@^http://[^/]*\.java\.com/.*\.(exe|zip)$@i) ||
+	  ($source_url =~ m@^http://[^/]*\.sun\.com/.*\.(exe|zip)$@i))
+    {
+        $xlrator_url = &check_cache($source_url,$hostaddr,$username,"Other",$unique);
+    }
+
+
 
     # -----------------------------------------------------------
 
@@ -166,12 +200,13 @@ while (<>) {
 
 # -------------------------------------------------------------------
 
+
 sub writelog
 {
     if ($logging)
     {
         open(LOGFILE,">>$logfile");
-        print LOGFILE time." $_[0] $_[1] $_[2] $_[3] $_[4]\n";
+        print LOGFILE time." $_[0] $_[1] $_[2] $_[3] $_[4] $_[5] $_[6]\n";
         close(LOGFILE);
     }
 }
@@ -233,9 +268,9 @@ sub check_cache
     $vendorid = $_[3];
     $vendorid =~ tr/A-Z/a-z/;
 
-    &debuglog("Processing URL $sourceurl");
-    &debuglog("Vendor ID is $vendorid");
-    &debuglog("UUID is $uuid");
+    &debuglog("[$_[1]] Processing URL $sourceurl");
+    &debuglog("[$_[1]] Vendor ID is $vendorid");
+    &debuglog("[$_[1]] UUID is $uuid");
 
     if (($proxysettings{'UPSTREAM_PROXY'}) && ($proxysettings{'UPSTREAM_USER'}))
     {
@@ -265,8 +300,8 @@ sub check_cache
         ($remote_mtime == &UPDXLT::getmtime("$updcachedir/$vendorid/$uuid/$updfile"))
        )
     {
-        &debuglog("File exists in cache and is up to date");
-        &debuglog("Retrieving file from cache ($updsource)");
+        &debuglog("[$_[1]] File exists in cache and is up to date");
+        &debuglog("[$_[1]] Retrieving file from cache ($updsource)");
         &setcachestatus("$updcachedir/$vendorid/$uuid/access.log",time);
         system("$apphome/bin/setperms $vendorid/$uuid/access.log");
         $cacheurl="http://$netsettings{'GREEN_1_ADDRESS'}:$http_port/updatecache/$vendorid/$uuid/$updfile";
@@ -279,25 +314,23 @@ sub check_cache
             &debuglog("Local timestamp: " . &UPDXLT::getmtime("$updcachedir/$vendorid/$uuid/$updfile"));
         } else { &debuglog("File not found in cache"); }
         $updsource="DLSOURCE";
-        &debuglog("Remote filesize:  $remote_size");
-        &debuglog("Remote timestamp: $remote_mtime");
-        &debuglog("Free disk space:  " . &UPDXLT::diskfree($updcachedir));
-        &debuglog("Disk usage: " . &UPDXLT::diskusage($updcachedir) . "% (max. $maxusage%)");
+        &debuglog("[$_[1]] Remote filesize:  $remote_size");
+        &debuglog("[$_[1]] Remote timestamp: $remote_mtime");
+        &debuglog("[$_[1]] Free disk space:  " . &UPDXLT::diskfree($updcachedir));
+        &debuglog("[$_[1]] Disk usage: " . &UPDXLT::diskusage($updcachedir) . "% (max. $maxusage%)");
         if (-e "$updcachedir/download/$vendorid/$updfile") { &debuglog("File download/$vendorid/$updfile exists"); }
-        &debuglog("Retrieving file from source ($updsource)");
-        &debuglog("Passive_Mode: $passive_mode");
+        &debuglog("[$_[1]] Retrieving file from source ($updsource)");
+        &debuglog("[$_[1]] Passive_Mode: $passive_mode");
 
         if ((!$passive_mode) && (&UPDXLT::diskusage($updcachedir) <= $maxusage) && ($remote_size <= &UPDXLT::diskfree($updcachedir)) && (!-e "$updcachedir/download/$vendorid/$updfile"))
         {
-            &debuglog("Running command $nice$apphome/bin/download $vendorid $sourceurl $cfmirror &");
+            &debuglog("[$_[1]] Running command $nice$apphome/bin/download $vendorid $sourceurl $cfmirror &");
             system("$nice$apphome/bin/download $vendorid $sourceurl $cfmirror &");
         }
         $cacheurl=$sourceurl;
     }
 
-    &writelog($_[1],$_[2],$_[3],$updsource,$sourceurl);
+    &writelog($_[1], $_[2],$_[3],$updsource,$sourceurl,$remote_size);
 
     return $cacheurl;
 }
-
-# -------------------------------------------------------------------
