@@ -6,8 +6,6 @@
 #
 # extended 2006-02-24 by weizen_42
 #
-# $Id: install.sh 458 2011-01-03 12:49:23Z weizen_42 $
-#
 
 SCRIPTPATH=`dirname $0`
 CMD="$1"

@@ -6,8 +6,6 @@
 #
 # Portions (c) 2012 by dotzball - http://www.blockouttraffic.de
 #
-# $Id: convert,v 1.0 2007/09/12 00:00:00 marco.s Exp $
-#
 
 use strict;
 

@@ -16,8 +16,6 @@
  *
  * Copyright (C) 2003-04-22 Robert Kerr <rkerr@go.to>
  *
- * $Id: setuid.c 1779 2008-09-02 08:04:36Z owes $
- *
  */
 
 #include <stdio.h>

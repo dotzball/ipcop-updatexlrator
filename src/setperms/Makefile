@@ -1,6 +1,4 @@
 #
-# $Id: Makefile 2012-01-19 21:22:04Z dotzball $
-#
 
 COMPILE=$(CC) $(CFLAGS) -D_GNU_SOURCE
 OBJLIBS=setuid.o

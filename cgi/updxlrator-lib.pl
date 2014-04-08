@@ -10,8 +10,6 @@
 # dotzball 2008-05-27:
 #		move functions from all local files to one library file
 #
-# $Id: updxlrator-lib.pl,v 1.1 2008/11/29 00:00:00 marco.s Exp $
-#
 
 package UPDXLT;
 

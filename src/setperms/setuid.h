@@ -3,9 +3,7 @@
  * This program is distributed under the terms of the GNU General Public
  * Licence.  See the file COPYING for details.
  * Simple header file for all setuid progs.
- * 
- * $Id: setuid.h 1501 2008-06-10 20:25:20Z owes $
- * 
+ *
  */
 
 #ifndef SETUID_H

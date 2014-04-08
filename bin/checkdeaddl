@@ -7,8 +7,6 @@
 # Portions (c) 2008 by dotzball - http://www.blockouttraffic.de
 # Portions (c) 2012 by dotzball - http://www.blockouttraffic.de
 #
-# $Id: checkdeaddl,v 1.1 2008/11/29 00:00:00 marco.s Exp $
-#
 
 use strict;
 

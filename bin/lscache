@@ -6,8 +6,6 @@
 #
 # Portions (c) 2012 by dotzball - http://www.blockouttraffic.de
 #
-# $Id: lscache,v 1.0 2007/09/11 00:00:00 marco.s Exp $
-#
 
 use strict;
 use Getopt::Std;

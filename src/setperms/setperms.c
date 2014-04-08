@@ -6,8 +6,6 @@
  * (c) 2007 marco.s - http://www.advproxy.net/update-accelerator
  * Portions (c) 2012 by dotzball - http://www.blockouttraffic.de
  *
- * $Id: setperms,v 2.0 2012-01-19 21:22:04Z dotzball $
- *
  */
 
 #include <stdio.h>
