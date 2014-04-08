@@ -188,7 +188,7 @@ while (<>) {
     if (
         (($source_url =~ m@^http://swcdn\.apple\.com/content/downloads/.*\.(tar|pkg)$@i) ||
          ($source_url =~ m@^http://appldnld\.apple\.com\.edgesuite\.net/.*\.(exe|dmg)$@i) ||
-	  ($source_url =~ m@^[h|f]tt?p://[^/]*\.apple\.com/.*\.(pfpkg|tar|pkg|dmg|exe)$@i) ||
+      ($source_url =~ m@^[h|f]tt?p://[^/]*\.apple\.com/.*\.(pfpkg|tar|pkg|dmg|exe)$@i) ||
          ($source_url =~ m@^http://.*\.g.akamai.net/.*/3093/1/.*\.(tar|pkg|dmg|exe)$@i))
        )
     {
@@ -210,7 +210,7 @@ while (<>) {
     # -----------------------------------------------------------
 
     if (($source_url =~ m@^http://[^/]*\.java\.com/.*\.(exe|zip)$@i) ||
-	  ($source_url =~ m@^http://[^/]*\.sun\.com/.*\.(exe|zip)$@i))
+      ($source_url =~ m@^http://[^/]*\.sun\.com/.*\.(exe|zip)$@i))
     {
         $xlrator_url = &check_cache($source_url,$hostaddr,$username,"Other",$unique);
     }

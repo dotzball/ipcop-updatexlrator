@@ -345,10 +345,10 @@ if (($xlratorsettings{'ACTION'} eq $Lang::tr{'updxlrtr cancel download'}) || ($x
 #if ($ENV{'QUERY_STRING'} && $xlratorsettings{'EXTENDED_GUI'} eq 'maintenance') {
  #   @temp_then = split(',', $ENV{'QUERY_STRING'});
   #  #$start                  = $temp_then[0];
-	#$xlratorsettings{'SORT_BY'} = $temp_then[0];
-	#$xlratorsettings{'ORDER'} = $temp_then[1];
-	#$xlratorsettings{'FILTER_VENDOR'} = $temp_then[2];
-	#$xlratorsettings{'ACTION'} = $temp_then[3];
+    #$xlratorsettings{'SORT_BY'} = $temp_then[0];
+    #$xlratorsettings{'ORDER'} = $temp_then[1];
+    #$xlratorsettings{'FILTER_VENDOR'} = $temp_then[2];
+    #$xlratorsettings{'ACTION'} = $temp_then[3];
 #}
 
 my $statusfilter  = $xlratorsettings{'FILTER_STATUS'};
@@ -1082,23 +1082,23 @@ foreach (@sources)
     {
         @updatelist = <$_/*>;
         $vendorid = substr($_,rindex($_,"/")+1);
-		$vendors{$vendorid}++;
-		# 2014 verify filter condition
-		if (
-			   ((($vendorid eq $vendorfilter) || $vendorfilterall))
-		)
+        $vendors{$vendorid}++;
+        # 2014 verify filter condition
+        if (
+               ((($vendorid eq $vendorfilter) || $vendorfilterall))
+        )
 
         {
 
-			foreach(@updatelist)
-			{
-				next if(/\.info$/);
-				$updatefile = substr($_,rindex($_,"/")+1);
-				$updatefile .= ":download/$vendorid/$updatefile";
-				$updatefile = " ".$updatefile;
-				push(@repositoryfiles,$updatefile);
-			}
-		}
+            foreach(@updatelist)
+            {
+                next if(/\.info$/);
+                $updatefile = substr($_,rindex($_,"/")+1);
+                $updatefile .= ":download/$vendorid/$updatefile";
+                $updatefile = " ".$updatefile;
+                push(@repositoryfiles,$updatefile);
+            }
+        }
     }
 }
 
@@ -1115,27 +1115,27 @@ foreach (@sources)
 {
     @updatelist=<$_/*>;
     $vendorid = substr($_,rindex($_,"/")+1);
-	$vendors{$vendorid}++;
-	# 2014 - verify only vendor condition - at this point we don't have the status yet
-	if ((($vendorid eq $vendorfilter) || $vendorfilterall))
-	{
+    $vendors{$vendorid}++;
+    # 2014 - verify only vendor condition - at this point we don't have the status yet
+    if ((($vendorid eq $vendorfilter) || $vendorfilterall))
+    {
 
-		foreach(@updatelist)
-		{
-			$uuid = substr($_,rindex($_,"/")+1);
-			if (-e "$_/source.url")
-			{
-				open (FILE,"$_/source.url");
-				$sourceurl=<FILE>;
-				close FILE;
-				chomp($sourceurl);
-				$updatefile = substr($sourceurl,rindex($sourceurl,'/')+1,length($sourceurl));
-				$_ = $updatefile; tr/[A-Z]/[a-z]/;
-				$updatefile = "$_:$vendorid/$uuid/$updatefile";
-				push(@repositoryfiles,$updatefile);
-			}
-		}
-	}
+        foreach(@updatelist)
+        {
+            $uuid = substr($_,rindex($_,"/")+1);
+            if (-e "$_/source.url")
+            {
+                open (FILE,"$_/source.url");
+                $sourceurl=<FILE>;
+                close FILE;
+                chomp($sourceurl);
+                $updatefile = substr($sourceurl,rindex($sourceurl,'/')+1,length($sourceurl));
+                $_ = $updatefile; tr/[A-Z]/[a-z]/;
+                $updatefile = "$_:$vendorid/$uuid/$updatefile";
+                push(@repositoryfiles,$updatefile);
+            }
+        }
+    }
 }
 
 @repositoryfiles = sort(@repositoryfiles);
@@ -1231,51 +1231,51 @@ print <<END
 <table width='100%' border='0'>
 
 <tr>
-	<td  style='width:30%;' class='base'>$Lang::tr{'updxlrtr sort by'}:</td>
-	<td  style='width:15%;'>
+    <td  style='width:30%;' class='base'>$Lang::tr{'updxlrtr sort by'}:</td>
+    <td  style='width:15%;'>
 
-	 <select name='SORT_BY'>
-		<option value='LAST_ACCESS' $selected{'SORT_BY'}{'LAST_ACCESS'}>$Lang::tr{'updxlrtr sort by last access'}</option>
-		<option value='LAST_CHECK' $selected{'SORT_BY'}{'LAST_CHECK'}>$Lang::tr{'updxlrtr sort by last check'}</option>
-		<option value='VENDOR' $selected{'SORT_BY'}{'VENDOR'}>$Lang::tr{'updxlrtr sort by vendor'}</option>
-		<option value='DATE' $selected{'SORT_BY'}{'DATE'}>$Lang::tr{'updxlrtr sort by date'}</option>
-		<option value='SIZE' $selected{'SORT_BY'}{'SIZE'}>$Lang::tr{'updxlrtr sort by size'}</option>
-		<option value='STATUS' $selected{'SORT_BY'}{'STATUS'}>$Lang::tr{'updxlrtr sort by status'}</option>
-		<option value='NAME' $selected{'SORT_BY'}{'NAME'}>$Lang::tr{'updxlrtr sort by name'}</option>
-	 </select>
-	<td>
-	<td style='width:30%;' class='base'>$Lang::tr{'updxlrtr order'}:</td>
-	<td style='width:25%;'>
-		<select name='ORDER'>
-		<option value='ASC' $selected{'ORDER'}{'ASC'}>$Lang::tr{'updxlrtr order asc'}</option>
-		<option value='DESC' $selected{'ORDER'}{'DESC'}>$Lang::tr{'updxlrtr order desc'}</option>
-	 </select>
-	</td>
+     <select name='SORT_BY'>
+        <option value='LAST_ACCESS' $selected{'SORT_BY'}{'LAST_ACCESS'}>$Lang::tr{'updxlrtr sort by last access'}</option>
+        <option value='LAST_CHECK' $selected{'SORT_BY'}{'LAST_CHECK'}>$Lang::tr{'updxlrtr sort by last check'}</option>
+        <option value='VENDOR' $selected{'SORT_BY'}{'VENDOR'}>$Lang::tr{'updxlrtr sort by vendor'}</option>
+        <option value='DATE' $selected{'SORT_BY'}{'DATE'}>$Lang::tr{'updxlrtr sort by date'}</option>
+        <option value='SIZE' $selected{'SORT_BY'}{'SIZE'}>$Lang::tr{'updxlrtr sort by size'}</option>
+        <option value='STATUS' $selected{'SORT_BY'}{'STATUS'}>$Lang::tr{'updxlrtr sort by status'}</option>
+        <option value='NAME' $selected{'SORT_BY'}{'NAME'}>$Lang::tr{'updxlrtr sort by name'}</option>
+     </select>
+    <td>
+    <td style='width:30%;' class='base'>$Lang::tr{'updxlrtr order'}:</td>
+    <td style='width:25%;'>
+        <select name='ORDER'>
+        <option value='ASC' $selected{'ORDER'}{'ASC'}>$Lang::tr{'updxlrtr order asc'}</option>
+        <option value='DESC' $selected{'ORDER'}{'DESC'}>$Lang::tr{'updxlrtr order desc'}</option>
+     </select>
+    </td>
 </tr>
 <tr>
     <td  style='width:30%;' class='base'>$Lang::tr{'updxlrtr sort by vendor'}:</td>
-	<td  style='width:15%;'>
-	<select name='FILTER_VENDOR'>
-	<option value='ALL' $selected{'FILTER_VENDOR'}{'ALL'}>$Lang::tr{'caps all'}</option>
+    <td  style='width:15%;'>
+    <select name='FILTER_VENDOR'>
+    <option value='ALL' $selected{'FILTER_VENDOR'}{'ALL'}>$Lang::tr{'caps all'}</option>
 END
     ;
 foreach my $vendor (keys %vendors) {
     if ($vendor) {
-	    if (!$selected{'FILTER_VENDOR'}{$vendor}) {
-		 $selected{'FILTER_VENDOR'}{$vendor} = '';
-		}
-		print "<option value='$vendor' $selected{'FILTER_VENDOR'}{$vendor}>$vendor</option>\n";
-	}
+        if (!$selected{'FILTER_VENDOR'}{$vendor}) {
+         $selected{'FILTER_VENDOR'}{$vendor} = '';
+        }
+        print "<option value='$vendor' $selected{'FILTER_VENDOR'}{$vendor}>$vendor</option>\n";
+    }
 }
 print <<END
-	</select>
-	</td>
-	<td style='width:30%;' class='base'></td>
-	<td style='width:25%;'></td>
+    </select>
+    </td>
+    <td style='width:30%;' class='base'></td>
+    <td style='width:25%;'></td>
 </tr>
 <tr>
  <td colspan="4">
-	<input type='submit' name='ACTION' value='$Lang::tr{'updxlrtr update'}'>
+    <input type='submit' name='ACTION' value='$Lang::tr{'updxlrtr update'}'>
  </td>
 </table>
 
@@ -1310,11 +1310,11 @@ END
 sub printcurrentfiles
 {
     #my $title = shift;
-	my $sortby = shift;
-	my $order = shift;
+    my $sortby = shift;
+    my $order = shift;
     my @files = @_;
-	#my $sortby = $xlratorsettings{'SORT_BY'};
-	#my $order = $xlratorsettings{'ORDER'};
+    #my $sortby = $xlratorsettings{'SORT_BY'};
+    #my $order = $xlratorsettings{'ORDER'};
 
     print <<END
 
@@ -1359,7 +1359,7 @@ END
 
         $lastaccess = "n/a";
         $lastcheck  = "n/a";
-		$lastrawaccess = 0;
+        $lastrawaccess = 0;
         $lastrawcheck  = 0;
 
         $status = $sfUnknown;
@@ -1407,37 +1407,37 @@ END
             $status = $sfOutdated;
         }
 
-		push(@logfilelist, "$status $vendorid $updatefile $filesize $filedate $lastaccess $lastcheck $lastrawaccess $lastrawcheck $size_updatefile");
-	}
+        push(@logfilelist, "$status $vendorid $updatefile $filesize $filedate $lastaccess $lastcheck $lastrawaccess $lastrawcheck $size_updatefile");
+    }
 
-	# 2014 - sort entry by user preferences
-	if ($sortby eq 'LAST_ACCESS') {
-	  @logfilelist = sort { (split ' ', $a)[7] <=> (split ' ', $b)[7] } @logfilelist;
-	}
-	elsif ($sortby eq 'LAST_CHECK') {
-	  @logfilelist = sort { (split ' ', $a)[8] <=> (split ' ', $b)[8] } @logfilelist;
-	}
-	elsif ($sortby eq 'SIZE') {
-	  @logfilelist = sort { (split ' ', $a)[9] <=> (split ' ', $b)[9] } @logfilelist;
-	}
-	elsif ($sortby eq 'DATE') {
-	  @logfilelist = sort { (split ' ', $a)[4] cmp (split ' ', $b)[4] } @logfilelist;
-	}
-	elsif ($sortby eq 'VENDOR') {
-	  @logfilelist = sort { (split ' ', $a)[1] cmp (split ' ', $b)[1] } @logfilelist;
-	}
-	elsif ($sortby eq 'NAME') {
-	  @logfilelist = sort { (split ' ', $a)[2] cmp (split ' ', $b)[2] } @logfilelist;
-	}
-	elsif ($sortby eq 'STATUS') {
-	  @logfilelist = sort { (split ' ', $a)[0] cmp (split ' ', $b)[0] } @logfilelist;
-	}
+    # 2014 - sort entry by user preferences
+    if ($sortby eq 'LAST_ACCESS') {
+      @logfilelist = sort { (split ' ', $a)[7] <=> (split ' ', $b)[7] } @logfilelist;
+    }
+    elsif ($sortby eq 'LAST_CHECK') {
+      @logfilelist = sort { (split ' ', $a)[8] <=> (split ' ', $b)[8] } @logfilelist;
+    }
+    elsif ($sortby eq 'SIZE') {
+      @logfilelist = sort { (split ' ', $a)[9] <=> (split ' ', $b)[9] } @logfilelist;
+    }
+    elsif ($sortby eq 'DATE') {
+      @logfilelist = sort { (split ' ', $a)[4] cmp (split ' ', $b)[4] } @logfilelist;
+    }
+    elsif ($sortby eq 'VENDOR') {
+      @logfilelist = sort { (split ' ', $a)[1] cmp (split ' ', $b)[1] } @logfilelist;
+    }
+    elsif ($sortby eq 'NAME') {
+      @logfilelist = sort { (split ' ', $a)[2] cmp (split ' ', $b)[2] } @logfilelist;
+    }
+    elsif ($sortby eq 'STATUS') {
+      @logfilelist = sort { (split ' ', $a)[0] cmp (split ' ', $b)[0] } @logfilelist;
+    }
 
-	if ($order eq 'DESC') { @logfilelist = reverse @logfilelist; }
+    if ($order eq 'DESC') { @logfilelist = reverse @logfilelist; }
 
-	foreach $_ (@logfilelist) {
+    foreach $_ (@logfilelist) {
         my ($status, $vendorid, $updatefile, $filesize, $filedate, $lastaccess, $lastcheck) = split;
-		 $id++;
+         $id++;
         if ($id % 2) {
             print "<tr class='table1colour'>\n"; }
         else {
@@ -1667,36 +1667,36 @@ END
 
 sub checkForNewVersion
 {
-	# download latest version
-	&downloadLatestVersionInfo();
+    # download latest version
+    &downloadLatestVersionInfo();
 
-	if(-e $latestVersionFile)
-	{
-		my %versionSettings = ();
-		&General::readhash($versionfile, \%versionSettings);
+    if(-e $latestVersionFile)
+    {
+        my %versionSettings = ();
+        &General::readhash($versionfile, \%versionSettings);
 
-		my %latestVersion = ();
-		&General::readhash($latestVersionFile, \%latestVersion);
+        my %latestVersion = ();
+        &General::readhash($latestVersionFile, \%latestVersion);
 
-		if($versionSettings{'VERSION_INSTALLED'} lt $latestVersion{'VERSION_AVAILABLE'})
-		{
-			&Header::openbox('100%', 'left', $Lang::tr{'info'});
+        if($versionSettings{'VERSION_INSTALLED'} lt $latestVersion{'VERSION_AVAILABLE'})
+        {
+            &Header::openbox('100%', 'left', $Lang::tr{'info'});
             my $msg = $Lang::tr{'updxlrtr update information'};
             $msg =~ s@__URL_UPDATE__@$latestVersion{'URL_UPDATE'}@g;
 
-			print <<END;
-				<table width="100%">
-				<tr>
-					<td>
-						$msg
-					</td>
-				</tr>
-				</table>
+            print <<END;
+                <table width="100%">
+                <tr>
+                    <td>
+                        $msg
+                    </td>
+                </tr>
+                </table>
 END
 
-			&Header::closebox();
-		}
-	}
+            &Header::closebox();
+        }
+    }
 }
 
 
@@ -1705,37 +1705,37 @@ END
 sub downloadLatestVersionInfo
 {
     # only check if we are online
-	if (! -e '/var/ipcop/red/active')
-	{
-		return;
-	}
+    if (! -e '/var/ipcop/red/active')
+    {
+        return;
+    }
 
-	# download latest version file if it is not existing or outdated (i.e. 5 days old)
-	if((! -e $latestVersionFile) || (int(-M $latestVersionFile) > 5))
-	{
-		my %versionSettings = ();
-		&General::readhash($versionfile, \%versionSettings);
+    # download latest version file if it is not existing or outdated (i.e. 5 days old)
+    if((! -e $latestVersionFile) || (int(-M $latestVersionFile) > 5))
+    {
+        my %versionSettings = ();
+        &General::readhash($versionfile, \%versionSettings);
 
-		my $ua = LWP::UserAgent->new;
-		$ua->timeout(120);
-		$ua->agent("Mozilla/4.0 (compatible; IPCop $General::version; Update Accelerator $versionSettings{'VERSION_INSTALLED'})");
-		my $content = $ua->get($updateUrl);
+        my $ua = LWP::UserAgent->new;
+        $ua->timeout(120);
+        $ua->agent("Mozilla/4.0 (compatible; IPCop $General::version; Update Accelerator $versionSettings{'VERSION_INSTALLED'})");
+        my $content = $ua->get($updateUrl);
 
-		if ( $content->is_success )
-		{
-			my %latestVersion = ();
+        if ( $content->is_success )
+        {
+            my %latestVersion = ();
 
-			# latest versions, format is: MOD_VERSION="2.2.1"
-			$content->content =~ /MOD_VERSION="(.+?)"/;
-			$latestVersion{'VERSION_AVAILABLE'} = $1;
+            # latest versions, format is: MOD_VERSION="2.2.1"
+            $content->content =~ /MOD_VERSION="(.+?)"/;
+            $latestVersion{'VERSION_AVAILABLE'} = $1;
 
-			# URL format is: MOD_URL="http://blockouttraffic.de/..."
-			$content->content =~ /MOD_URL="(.+?)"/;
-			$latestVersion{'URL_UPDATE'} = $1;
+            # URL format is: MOD_URL="http://blockouttraffic.de/..."
+            $content->content =~ /MOD_URL="(.+?)"/;
+            $latestVersion{'URL_UPDATE'} = $1;
 
-			&General::writehash($latestVersionFile, \%latestVersion);
-		}
-	}
+            &General::writehash($latestVersionFile, \%latestVersion);
+        }
+    }
 }
 
 # -------------------------------------------------------------------
