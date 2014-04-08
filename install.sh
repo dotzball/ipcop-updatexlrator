@@ -124,7 +124,7 @@ ai()
     fi
 
     echo "Patching language files"
-    addtolanguage UpdateAccelerator bz,de,en,es,fr,it,nl,pl,pt,ru $SCRIPTPATH/langs
+    addtolanguage UpdateAccelerator bz,de,en,es,fr,it,nl,pl,pt,ru,tr $SCRIPTPATH/langs
 
     echo " "
     let STEP++
