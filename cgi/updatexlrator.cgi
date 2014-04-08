@@ -689,6 +689,10 @@ END
             {
                 print "<img src='/images/updxl-src-avast.gif' alt='Avast'}' />&nbsp;</td>\n";
             }
+            elsif ($vendorid =~ /^Lenovo/i)
+            {
+                print "<img src='/images/updxl-src-lenovo.gif' alt='Lenovo'}' />&nbsp;</td>\n";
+            }
             else
             {
                 if (-e "/home/httpd/html/images/updxl-src-" . $vendorid . ".gif")
@@ -997,6 +1001,11 @@ foreach (@vendors)
     {
         print "<img src='/images/updxl-src-avast.gif' alt='Avast'}' />&nbsp;</nobr></td>\n";
         print "<td class='base'>&nbsp;Avast&nbsp;</td>\n";
+    }
+    elsif ($vendorid =~ /^Lenovo/i)
+    {
+        print "<img src='/images/updxl-src-lenovo.gif' alt='Lenovo'}' />&nbsp;</nobr></td>\n";
+        print "<td class='base'>&nbsp;Lenovo&nbsp;</td>\n";
     }
     else
     {
@@ -1509,6 +1518,10 @@ END
         {
             print "<img src='/images/updxl-src-avast.gif' alt='Avast'}' />&nbsp;</td>\n";
         }
+        elsif ($vendorid =~ /^Lenovo$/i)
+        {
+            print "<img src='/images/updxl-src-lenovo.gif' alt='Lenovo'}' />&nbsp;</td>\n";
+        }
         else
         {
             if (-e "/home/httpd/html/images/updxl-src-" . $vendorid . ".gif")
@@ -1649,11 +1662,13 @@ sub printlegendsource
         <td align='center'><img src='/images/updxl-src-avast.gif' alt='Avast' /></td>
         <td class='base'>Avast</td>
         <td class='base'>&nbsp;</td>
+        <td align='center'><img src='/images/updxl-src-lenovo.gif' alt='Lenovo' /></td>
+        <td class='base'>Lenovo</td>
         <td align='center'><img src='/images/updxl-src-linux.gif' alt='Linux' /></td>
         <td class='base'>Linux</td>
     </tr>
     <tr>
-        <td colspan='13'></td>
+        <td colspan='15'></td>
     </tr>
     <tr>
         <td class='base'>&nbsp;</td>
@@ -1669,6 +1684,8 @@ sub printlegendsource
         <td class='base'>&nbsp;</td>
         <td align='center'><img src='/images/updxl-src-unknown.gif' alt='$Lang::tr{'updxlrtr other'}' /></td>
         <td class='base'>$Lang::tr{'updxlrtr other'}</td>
+        <td align='center'></td>
+        <td class='base'></td>
     </tr>
 END
 ;
@@ -1680,7 +1697,7 @@ sub printlegendspacer
 {
     print <<END
     <tr>
-        <td colspan='13'>&nbsp;<br></td>
+        <td colspan='15'>&nbsp;<br></td>
     </tr>
 END
 ;
