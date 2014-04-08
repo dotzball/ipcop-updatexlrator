@@ -629,7 +629,8 @@ END
             }
             if (-e "$UPDXLT::repository/$updatefile.info") {
                 &General::readhash("$UPDXLT::repository/$updatefile.info", \%dlinfo);
-            } else {
+            }
+            else {
                 undef(%dlinfo);
             }
 
@@ -654,7 +655,8 @@ END
         if (&getPID("\\s/usr/bin/wget\\s.*\\s".quotemeta($dlinfo{'SRCURL'})."\$"))
         {
             print "<img src='/images/updxl-led-blue.gif' alt='$Lang::tr{'updxlrtr condition download'}' />&nbsp;</td>\n";
-        } else {
+        }
+        else {
             print "<img src='/images/updxl-led-gray.gif' alt='$Lang::tr{'updxlrtr condition suspended'}' />&nbsp;</td>\n";
         }
 
@@ -662,25 +664,32 @@ END
             if ($vendorid =~ /^Adobe$/i)
             {
                 print "<img src='/images/updxl-src-adobe.gif' alt='Adobe'}' />&nbsp;</td>\n";
-            } elsif ($vendorid =~ /^Microsoft$/i)
+            }
+            elsif ($vendorid =~ /^Microsoft$/i)
             {
                 print "<img src='/images/updxl-src-windows.gif' alt='Microsoft'}' />&nbsp;</td>\n";
-            } elsif ($vendorid =~ /^Symantec$/i)
+            }
+            elsif ($vendorid =~ /^Symantec$/i)
             {
                 print "<img src='/images/updxl-src-symantec.gif' alt='Symantec'}' />&nbsp;</td>\n";
-            } elsif ($vendorid =~ /^Linux$/i)
+            }
+            elsif ($vendorid =~ /^Linux$/i)
             {
                 print "<img src='/images/updxl-src-linux.gif' alt='Linux'}' />&nbsp;</td>\n";
-            } elsif ($vendorid =~ /^TrendMicro$/i)
+            }
+            elsif ($vendorid =~ /^TrendMicro$/i)
             {
                 print "<img src='/images/updxl-src-trendmicro.gif' alt='Trend Micro'}' />&nbsp;</td>\n";
-            } elsif ($vendorid =~ /^Apple$/i)
+            }
+            elsif ($vendorid =~ /^Apple$/i)
             {
                 print "<img src='/images/updxl-src-apple.gif' alt='Apple'}' />&nbsp;</td>\n";
-            } elsif ($vendorid =~ /^Avast$/i)
+            }
+            elsif ($vendorid =~ /^Avast$/i)
             {
                 print "<img src='/images/updxl-src-avast.gif' alt='Avast'}' />&nbsp;</td>\n";
-            } else
+            }
+            else
             {
                 if (-e "/home/httpd/html/images/updxl-src-" . $vendorid . ".gif")
                 {
@@ -958,31 +967,38 @@ foreach (@vendors)
     {
         print "<img src='/images/updxl-src-adobe.gif' alt='Adobe'}' />&nbsp;</nobr></td>\n";
         print "<td class='base'>&nbsp;Adobe&nbsp;</td>\n";
-    } elsif ($vendorid =~ /^Microsoft$/i)
+    }
+    elsif ($vendorid =~ /^Microsoft$/i)
     {
         print "<img src='/images/updxl-src-windows.gif' alt='Microsoft'}' />&nbsp;</nobr></td>\n";
         print "<td class='base'>&nbsp;Microsoft&nbsp;</td>\n";
-    } elsif ($vendorid =~ /^Symantec$/i)
+    }
+    elsif ($vendorid =~ /^Symantec$/i)
     {
         print "<img src='/images/updxl-src-symantec.gif' alt='Symantec'}' />&nbsp;</nobr></td>\n";
         print "<td class='base'>&nbsp;Symantec&nbsp;</td>\n";
-    } elsif ($vendorid =~ /^Linux$/i)
+    }
+    elsif ($vendorid =~ /^Linux$/i)
     {
         print "<img src='/images/updxl-src-linux.gif' alt='Linux'}' />&nbsp;</nobr></td>\n";
         print "<td class='base'>&nbsp;Linux&nbsp;</td>\n";
-    } elsif ($vendorid =~ /^TrendMicro$/i)
+    }
+    elsif ($vendorid =~ /^TrendMicro$/i)
     {
         print "<img src='/images/updxl-src-trendmicro.gif' alt='Trend Micro'}' />&nbsp;</nobr></td>\n";
         print "<td class='base'>&nbsp;Trend&nbsp;Micro&nbsp;</td>\n";
-    } elsif ($vendorid =~ /^Apple$/i)
+    }
+    elsif ($vendorid =~ /^Apple$/i)
     {
         print "<img src='/images/updxl-src-apple.gif' alt='Apple'}' />&nbsp;</nobr></td>\n";
         print "<td class='base'>&nbsp;Apple&nbsp;</td>\n";
-    } elsif ($vendorid =~ /^Avast$/i)
+    }
+    elsif ($vendorid =~ /^Avast$/i)
     {
         print "<img src='/images/updxl-src-avast.gif' alt='Avast'}' />&nbsp;</nobr></td>\n";
         print "<td class='base'>&nbsp;Avast&nbsp;</td>\n";
-    } else
+    }
+    else
     {
         if (-e "/home/httpd/html/images/updxl-src-" . $vendorid . ".gif")
         {
@@ -1468,25 +1484,32 @@ END
         if ($vendorid =~ /^Adobe$/i)
         {
             print "<img src='/images/updxl-src-adobe.gif' alt='Adobe'}' />&nbsp;</td>\n";
-        } elsif ($vendorid =~ /^Microsoft$/i)
+        }
+        elsif ($vendorid =~ /^Microsoft$/i)
         {
             print "<img src='/images/updxl-src-windows.gif' alt='Microsoft'}' />&nbsp;</td>\n";
-        } elsif ($vendorid =~ /^Symantec$/i)
+        }
+        elsif ($vendorid =~ /^Symantec$/i)
         {
             print "<img src='/images/updxl-src-symantec.gif' alt='Symantec'}' />&nbsp;</td>\n";
-        } elsif ($vendorid =~ /^Linux$/i)
+        }
+        elsif ($vendorid =~ /^Linux$/i)
         {
             print "<img src='/images/updxl-src-linux.gif' alt='Linux'}' />&nbsp;</td>\n";
-        } elsif ($vendorid =~ /^TrendMicro$/i)
+        }
+        elsif ($vendorid =~ /^TrendMicro$/i)
         {
             print "<img src='/images/updxl-src-trendmicro.gif' alt='Trend Micro'}' />&nbsp;</td>\n";
-        } elsif ($vendorid =~ /^Apple$/i)
+        }
+        elsif ($vendorid =~ /^Apple$/i)
         {
             print "<img src='/images/updxl-src-apple.gif' alt='Apple'}' />&nbsp;</td>\n";
-        } elsif ($vendorid =~ /^Avast$/i)
+        }
+        elsif ($vendorid =~ /^Avast$/i)
         {
             print "<img src='/images/updxl-src-avast.gif' alt='Avast'}' />&nbsp;</td>\n";
-        } else
+        }
+        else
         {
             if (-e "/home/httpd/html/images/updxl-src-" . $vendorid . ".gif")
             {

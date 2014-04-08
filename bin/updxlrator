@@ -106,7 +106,6 @@ while (<>) {
     # -----------------------------------------------------------
     #  Section: Windows Update / Windows Downloads
     # -----------------------------------------------------------
-
     if (
         (($source_url =~ m@^http://[^/]*\.microsoft\.com/.*\.(exe|psf|msi|msp|msu|dmg|cab)$@i) ||
          ($source_url =~ m@^http://[^/]*\.windowsupdate\.com/.*\.(exe|psf|msi|msp|msu|dmg|cab)$@i))
@@ -120,7 +119,6 @@ while (<>) {
     # -----------------------------------------------------------
     #  Section: Adobe Downloads
     # -----------------------------------------------------------
-
     if (
         ($source_url =~ m@^http://(ar)?download\.adobe\.com/.*\.(exe|msi|bin|dmg|idx|gz)$@i) ||
         ($source_url =~ m@^http://swupdl\.adobe\.com/updates/.*\.(exe|msi|bin|dmg|idx|gz|[a-z][a-z]_[A-Z][A-Z])$@i) ||
@@ -134,7 +132,6 @@ while (<>) {
     # -----------------------------------------------------------
     #  Section: Linux Downloads
     # -----------------------------------------------------------
-
     if ($source_url =~ m@^[h|f]t?tp://[^?]+\.(deb|rpm)$@i)
     {
         $xlrator_url = &check_cache($source_url,$hostaddr,$username,"Linux",$mirror);
@@ -143,7 +140,6 @@ while (<>) {
     # -----------------------------------------------------------
     #  Section: Trend Micro Downloads
     # -----------------------------------------------------------
-
     if (
         ($source_url =~ m@^http://[^/]*\.trendmicro\.com/activeupdate/.*@i) &&
         ($source_url !~ m@.*/tmnotify\.dat$@i) &&
@@ -157,7 +153,6 @@ while (<>) {
     # -----------------------------------------------------------
     #  Section: Symantec Downloads
     # -----------------------------------------------------------
-
     if ($source_url =~ m@^[h|f]tt?p://[^/]*\.symantec(liveupdate)?\.com/.*\.(exe|zip|vdb|xdb)$@i)
     {
         $xlrator_url = &check_cache($source_url,$hostaddr,$username,"Symantec",$unique);
@@ -166,7 +161,6 @@ while (<>) {
     # -----------------------------------------------------------
     #  Section: Mozilla Downloads
     # -----------------------------------------------------------
-
     if ($source_url =~ m@^[h|f]tt?p://[^/]*\.mozilla\.org/.*\.(exe|zip|tar)$@i)
     {
         $xlrator_url = &check_cache($source_url,$hostaddr,$username,"Other",$unique);
@@ -175,7 +169,6 @@ while (<>) {
     # -----------------------------------------------------------
     #  Section: NVIDIA Downloads
     # -----------------------------------------------------------
-
     if ($source_url =~ m@^http://[^/]+\.download.nvidia.com/.*\.(exe|zip)$@i)     {
         $xlrator_url = &check_cache($source_url,$hostaddr,$username,"Other",$unique);
     }
@@ -184,7 +177,6 @@ while (<>) {
     # -----------------------------------------------------------
     #  Section: Apple Downloads
     # -----------------------------------------------------------
-
     if (
         (($source_url =~ m@^http://swcdn\.apple\.com/content/downloads/.*\.(tar|pkg)$@i) ||
          ($source_url =~ m@^http://appldnld\.apple\.com\.edgesuite\.net/.*\.(exe|dmg)$@i) ||
@@ -198,7 +190,6 @@ while (<>) {
     # -----------------------------------------------------------
     #  Section: Avast Downloads
     # -----------------------------------------------------------
-
     if ($source_url =~ m@^http://download[\d]*\.avast\.com/.*\.(exe|vpu)$@i)
     {
         $xlrator_url = &check_cache($source_url,$hostaddr,$username,"Avast",$mirror);
@@ -208,7 +199,6 @@ while (<>) {
     # -----------------------------------------------------------
     #  Section: Java  Downloads
     # -----------------------------------------------------------
-
     if (($source_url =~ m@^http://[^/]*\.java\.com/.*\.(exe|zip)$@i) ||
       ($source_url =~ m@^http://[^/]*\.sun\.com/.*\.(exe|zip)$@i))
     {
