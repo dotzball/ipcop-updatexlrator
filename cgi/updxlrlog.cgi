@@ -74,20 +74,20 @@ $logsettings{'LOGVIEW_REVERSE'}  = 'off';
 $logsettings{'LOGVIEW_VIEWSIZE'} = 150;
 &General::readhash('/var/ipcop/logging/settings', \%logsettings);
 
-	
+
 
 if ($cgiparams{'ACTION'} eq '') {
     my %save = ();
     &General::readhash('/var/ipcop/addons/updatexlrator/viewersettings', \%save)  if (-e '/var/ipcop/addons/updatexlrator/viewersettings');
     $cgiparams{'FILTER'}        = $save{'FILTER'}        if (exists($save{'FILTER'}));
     $cgiparams{'ENABLE_FILTER'} = $save{'ENABLE_FILTER'} if (exists($save{'ENABLE_FILTER'}));
-	
+
 	$cgiparams{'INCLUDE_FILTER'}        = $save{'INCLUDE_FILTER'}        if (exists($save{'INCLUDE_FILTER'}));
     $cgiparams{'ENABLE_INCLUDE_FILTER'} = $save{'ENABLE_INCLUDE_FILTER'} if (exists($save{'ENABLE_INCLUDE_FILTER'}));
-	
+
 	$cgiparams{'SORT_BY'} = $save{'SORT_BY'} if (exists($save{'SORT_BY'}));
 	$cgiparams{'ORDER'} = $save{'ORDER'} if (exists($save{'ORDER'}));
-	
+
 	$cgiparams{'FULL_URL'} = $save{'FULL_URL'} if (exists($save{'FULL_URL'}));
 	$cgiparams{'MEASURES_RAW'} = $save{'MEASURES_RAW'} if (exists($save{'MEASURES_RAW'}));
 }
@@ -104,8 +104,8 @@ if ($cgiparams{'ACTION'} eq $Lang::tr{'restore defaults'}) {
 	$cgiparams{'ORDER'}     = 'ASC';
 	$cgiparams{'FULL_URL'}     = 'off';
 	$cgiparams{'MEASURES_RAW'}     = 'off';
-	
-	
+
+
 }
 
 if ($cgiparams{'ACTION'} eq $Lang::tr{'save'}) {
@@ -118,7 +118,7 @@ if ($cgiparams{'ACTION'} eq $Lang::tr{'save'}) {
 	$save{'ORDER'} = $cgiparams{'ORDER'};
 	$save{'FULL_URL'} = $cgiparams{'FULL_URL'};
 	$save{'MEASURES_RAW'} = $cgiparams{'MEASURES_RAW'};;
-	
+
     &General::writehash('/var/ipcop/addons/updatexlrator/viewersettings', \%save);
 }
 
@@ -142,9 +142,9 @@ if ($ENV{'QUERY_STRING'} && $cgiparams{'ACTION'} ne $Lang::tr{'update'}) {
 	$cgiparams{'FILTER'} = $temp_then[10];
 	$cgiparams{'ENABLE_INCLUDE_FILTER'} = $temp_then[11];
 	$cgiparams{'INCLUDE_FILTER'} = $temp_then[12];
-	
 
-	
+
+
 }
 
 if (!($cgiparams{'MONTH'} =~ /^(0|1|2|3|4|5|6|7|8|9|10|11)$/)
@@ -173,7 +173,7 @@ else {
     $cgiparams{'DAY'}   = $temp_then[3];
 }
 
-# Date to display 
+# Date to display
 my $date;
 $date = sprintf("%d-%02d-%02d", $year, $cgiparams{'MONTH'}+1, $cgiparams{'DAY'});
 
@@ -208,7 +208,7 @@ if(defined $filter) {
 		$filter       = '';
 		$continueflag = 0;
 	}
-}	
+}
 
 if(defined $includefilter) {
 	my $temp2     = "";
@@ -218,7 +218,7 @@ if(defined $includefilter) {
 		$errormessage = "$Lang::tr{'bad ignore filter'}:.$@<P>";
 		$includefilter       = '';
 		$continueflag = 0;
-	} 
+	}
 }
 if ($continueflag)
  {
@@ -238,10 +238,10 @@ if ($continueflag)
             $filestr = sprintf("/var/log/updatexlrator/cache.log-%d%02d%02d", $year, $cgiparams{'MONTH'}+1, $day_extension);
             $filestr = "${filestr}.gz" if -f "${filestr}.gz";
         }
-		
+
         # now read file if existing
         if (open(FILE, ($filestr =~ /.gz$/ ? "gzip -dc $filestr |" : $filestr))) {
-			
+
 			#&General::log("reading $filestr");
             my @temp_now = localtime(time);
             $temp_now[4] = $cgiparams{'MONTH'};
@@ -269,9 +269,9 @@ if ($continueflag)
         READ: while (<FILE>) {
                 my ($datetime, $ip, $username, $vendorname, $result, $url, $size) = split;
 				$ip =~ tr/\/-//d;
-				
-                
-				
+
+
+
                 # for debug
                 $lastdatetime = $datetime;
 				my $testpassed = 0;
@@ -283,24 +283,24 @@ if ($continueflag)
 					&& ((($result eq $responsecode) || $responseall))
 					&& ((($url =~ /$includefilter/) || ($includefilter eq "")))
 					)
-					
+
                 {
 						$ips{$ip}++;
 						$responsecodes{$result}++;
 						$vendors{$vendorname}++;
-						
-						
+
+
 						# when standart viewing, just keep in memory the correct slices
 						# it starts a '$start' and size is $viewport
 						# If export, then keep all lines...
 						if ($cgiparams{'ACTION'} eq $Lang::tr{'export'}) {
 							$log[ $lines++ ] = "$datetime $ip $vendorname $result $url $username $size";
 						}
-						else {						 
+						else {
 						    $lines++;
 							push(@log, "$datetime $ip $vendorname $result $url $username $size");
 						}
-						
+
                 }
 
                 # finish loop when date of lines are past maxtime
@@ -427,7 +427,7 @@ print <<END
 	</select>
 	</td>
 	<td width='45%'  align='center'>
-		
+
 	</td>
     <td class='onlinehelp'>
         <!-- <a href='${General::adminmanualurl}/logs-proxy.html' target='_blank'><img src='/images/web-support.png' alt='$Lang::tr{'online help en'}' title='$Lang::tr{'online help en'}' /></a> -->
@@ -446,13 +446,13 @@ print <<END
 	<option value='ALL' $selected{'SOURCE_IP'}{'ALL'}>$Lang::tr{'caps all'}</option>
 END
     ;
-if (%ips) {	
+if (%ips) {
 	foreach my $ip (keys %ips) {
 		if (defined $ip) {
 			print "<option value='$ip' $selected{'SOURCE_IP'}{$ip}>$ip</option>\n";
 		}
 	}
-}	
+}
 print <<END
 	</select>
 	</td>
@@ -462,11 +462,11 @@ print <<END
 	<option value='ALL' $selected{'RESPONSE_CODE'}{'ALL'}>$Lang::tr{'caps all'}</option>
 END
     ;
-if (%responsecodes) {	
+if (%responsecodes) {
 	foreach my $responsecode (keys %responsecodes) {
 		print "<option value='$responsecode' $selected{'RESPONSE_CODE'}{$responsecode}>$responsecode</option>\n";
 	}
-}	
+}
 print <<END
 	</select>
 	</td>
@@ -485,9 +485,9 @@ if (%vendors) {
 	foreach my $vendor (keys %vendors) {
 		if ($vendor) {
 			print "<option value='$vendor' $selected{'VENDOR'}{$vendor}>$vendor</option>\n";
-		}	
+		}
 	}
-}	
+}
 print <<END
 	</select>
 	</td>
@@ -530,17 +530,17 @@ print <<END
 	 <select name='SORT_BY'>
 		<option value='DATE' $selected{'SORT_BY'}{'DATE'}>$Lang::tr{'updxlrlog sort by date'}</option>
 		<option value='RESULT' $selected{'SORT_BY'}{'RESULT'}>$Lang::tr{'updxlrlog sort by result code'}</option>
-		<option value='VENDOR' $selected{'SORT_BY'}{'VENDOR'}>Vendor</option>		
+		<option value='VENDOR' $selected{'SORT_BY'}{'VENDOR'}>Vendor</option>
 		<option value='SIZE' $selected{'SORT_BY'}{'SIZE'}>$Lang::tr{'updxlrlog sort by size'}</option>
 		<option value='URL' $selected{'SORT_BY'}{'URL'}>$Lang::tr{'updxlrlog sort by url'}</option>
-	 </select>	
-	<td>	
+	 </select>
+	<td>
 	<td style='width:30%;' class='base'>$Lang::tr{'updxlrlog order'}:</td>
 	<td style='width:25%;'>
 		<select name='ORDER'>
 		<option value='ASC' $selected{'ORDER'}{'ASC'}>$Lang::tr{'updxlrlog order asc'}</option>
 		<option value='DESC' $selected{'ORDER'}{'DESC'}>$Lang::tr{'updxlrlog order desc'}</option>
-	 </select>	
+	 </select>
 	</td>
 </tr>
 </table>
@@ -583,17 +583,17 @@ $columnsortedclass{$sortby} = "ipcop_StatusBigRed";
 
 # sort by date?	Do nothing!
 
-# sort by vendor?	
+# sort by vendor?
 if ($sortby eq 'VENDOR')
 {
-	@log = sort { (split ' ', $a)[2] <=> (split ' ', $b)[2] } @log ;	
+	@log = sort { (split ' ', $a)[2] <=> (split ' ', $b)[2] } @log ;
 }
-# sort by size?	
+# sort by size?
 elsif ($sortby eq 'SIZE') {
 	@log = sort { (split ' ', $a)[6] <=> (split ' ', $b)[6] } @log ;
 }
 # sort by result?
-elsif ($sortby eq 'RESULT')	
+elsif ($sortby eq 'RESULT')
 {
 	@log = sort { (split ' ', $a)[3] cmp (split ' ', $b)[3] } @log;
 }
@@ -657,10 +657,10 @@ else {
 print "<p><b>$Lang::tr{'web hits'} $date: $lines - $Lang::tr{'updxlrlog sort by'} $sortby</b></p>";
 if ($lines != 0) { &oldernewer(); }
 
-	
-	
 
- 
+
+
+
 print <<END
 <table width='100%'>
 <tr>
@@ -673,21 +673,21 @@ print <<END
 </tr>
 END
     ;
-	
+
 
 my $ll = 0;
 foreach $_ (@log) {
-   
+
     my ($datetime, $ip, $vendor, $result, $url, $username, $size) = split;
     my ($SECdt, $MINdt, $HOURdt, $DAYdt, $MONTHdt, $YEARdt) = localtime($datetime);
     $SECdt  = sprintf("%.02d", $SECdt);
     $MINdt  = sprintf("%.02d", $MINdt);
     $HOURdt = sprintf("%.02d", $HOURdt);
     #my $fullurl = $url;
-	
+
 	#my $rate = 0;
-	
-	#if ($duration > 0) 
+
+	#if ($duration > 0)
 	#{
 	#  $rate = $size / ($duration * 0.001);
 	#} else {
@@ -695,14 +695,14 @@ foreach $_ (@log) {
 	#}
 	#$rate = &ADVPXL::get_rate_str($rate) if (! $measuresraw);
 	#$rate = &ADVPXL::get_rate_str_bytes($rate) if ($measuresraw);
-	
+
 	$size = &UPDXLRL::get_filesize_str($size) if (! $measuresraw);
 	#$duration = &ADVPXL::truncate_ms_to_sec($duration) if (! $measuresraw);
 	# sprintf("%.01d", ($me + 1023)/1024);
-	
+
 	my $urlsize = 50;
 	$urlsize = 190 if ($fullurl);
-	
+
     $url =~ /(^.{0,$urlsize})/;
     my $part = $1;
     unless (length($part) < $urlsize) { $part = "${part}..."; }
@@ -714,7 +714,7 @@ foreach $_ (@log) {
     else {
         $DAYdt = '';
     }
-	
+
 	#TODO: move inline style in stylesheet
 	my $resultstyle='';
 	if ($result eq 'UPDCACHE') {
