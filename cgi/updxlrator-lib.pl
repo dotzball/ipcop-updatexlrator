@@ -140,3 +140,34 @@ sub setcachestatus
 
 # -------------------------------------------------------------------
 
+###
+### return the size of a file in a human readable format
+### added by joeyramone76 2014
+sub get_filesize_str
+{
+    my $size = shift();
+
+    if ($size > 1099511627776)  #   TiB: 1024 GiB
+    {
+        return sprintf("%.2f TiB", $size / 1099511627776);
+    }
+    elsif ($size > 1073741824)  #   GiB: 1024 MiB
+    {
+        return sprintf("%.2f GiB", $size / 1073741824);
+    }
+    elsif ($size > 1048576)     #   MiB: 1024 KiB
+    {
+        return sprintf("%.2f MiB", $size / 1048576);
+    }
+    elsif ($size > 1024)        #   KiB: 1024 B
+    {
+        return sprintf("%.2f KiB", $size / 1024);
+    }
+    else                          #   bytes
+    {
+        return sprintf("%.2f B", $size );
+    }
+}
+
+# -------------------------------------------------------------------
+

@@ -23,7 +23,7 @@ require '/usr/lib/ipcop/general-functions.pl';
 require '/usr/lib/ipcop/lang.pl';
 require '/usr/lib/ipcop/header.pl';
 
-require '/var/ipcop/addons/updatexlrator/updxlrlog-lib.pl';
+require '/var/ipcop/addons/updatexlrator/updxlrator-lib.pl';
 
 use POSIX();
 
@@ -235,7 +235,7 @@ if ($continueflag)
             $loop = 0;
         }
         else {
-            $filestr = sprintf("/var/log/updatexlrator/cache.log-%d%02d%02d", $year, $cgiparams{'MONTH'}+1, $day_extension);
+            $filestr = sprintf("$logdir/cache.log-%d%02d%02d", $year, $cgiparams{'MONTH'}+1, $day_extension);
             $filestr = "${filestr}.gz" if -f "${filestr}.gz";
         }
 
@@ -696,7 +696,7 @@ foreach $_ (@log) {
 	#$rate = &ADVPXL::get_rate_str($rate) if (! $measuresraw);
 	#$rate = &ADVPXL::get_rate_str_bytes($rate) if ($measuresraw);
 
-	$size = &UPDXLRL::get_filesize_str($size) if (! $measuresraw);
+	$size = &UPDXLT::get_filesize_str($size) if (! $measuresraw);
 	#$duration = &ADVPXL::truncate_ms_to_sec($duration) if (! $measuresraw);
 	# sprintf("%.01d", ($me + 1023)/1024);
 

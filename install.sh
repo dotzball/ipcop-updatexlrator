@@ -140,7 +140,7 @@ ai()
 
     echo "/home/httpd/cgi-bin/updatexlrator.cgi"
     addcgi $SCRIPTPATH/cgi/updatexlrator.cgi
-	    
+
 	echo "/home/httpd/cgi-bin/updxlrlog.cgi"
     addcgi $SCRIPTPATH/cgi/updxlrlog.cgi
 
@@ -157,9 +157,6 @@ ai()
 
     echo "/var/ipcop/addons/updatexlrator/updxlrator-lib.pl"
     cp $SCRIPTPATH/cgi/updxlrator-lib.pl /var/ipcop/addons/updatexlrator/updxlrator-lib.pl
-	
-	echo "/var/ipcop/addons/updatexlrator/updxlrlog-lib.pl"
-    cp $SCRIPTPATH/cgi/updxlrlog-lib.pl /var/ipcop/addons/updatexlrator/updxlrlog-lib.pl
 
     for CRONSCRIPT in daily weekly monthly
     do
