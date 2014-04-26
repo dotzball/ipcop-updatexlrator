@@ -1637,6 +1637,7 @@ sub savesettings
     $redirectorconf{'NAME'} = "$Lang::tr{'updxlrtr update accelerator'}";
     $redirectorconf{'ORDER'} = 20;
     $redirectorconf{'CMD'} = '/usr/sbin/updxlrator';
+    $redirectorconf{'OPTION_CHAIN'} = '-f';
     $redirectorconf{'ENABLED'} = $xlratorsettings{'ENABLED'};
 
     &General::writehash("/var/ipcop/proxy/redirector/updatexlrator", \%redirectorconf);

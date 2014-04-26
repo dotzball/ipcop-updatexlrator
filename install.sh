@@ -15,7 +15,7 @@ CMD="$1"
 STEP=1
 UPDATE=0
 
-UPDXLVER=2.2.1
+UPDXLVER=2.2.2
 UPDXLURL=http://blockouttraffic.de/ua_index.php
 HTDOCS="/home/httpd/html"
 HTDOCSVHOST81="/home/httpd/vhost81/html"
@@ -181,6 +181,9 @@ ai()
         echo "NAME='Update Accelerator'" >> /var/ipcop/proxy/redirector/updatexlrator
         echo "CMD=/usr/sbin/updxlrator" >> /var/ipcop/proxy/redirector/updatexlrator
         chown nobody.nobody /var/ipcop/proxy/redirector/updatexlrator
+    elif [ $(/bin/grep -c OPTION_CHAIN /var/ipcop/proxy/redirector/updatexlrator) == 0 ]; then
+        echo "/var/ipcop/proxy/redirector/updatexlrator"
+        echo "OPTION_CHAIN=-f" >> /var/ipcop/proxy/redirector/updatexlrator
     fi
 
     echo " "
@@ -347,13 +350,13 @@ fi
 # check IPCop version
 VERSIONOK=1
 if [ 0$LIBVERSION -ge 2 ]; then
-    isversion 2.0.3 newer
+    isversion 2.1.5 newer
     VERSIONOK=$?
 fi
 #DEBUG:
 #echo "VERSIONOK: $VERSIONOK"
 if [ $VERSIONOK -ne 0 ]; then
-    echo "Upgrade your IPCop, this Addon requires at least IPCop 2.0.3"
+    echo "Upgrade your IPCop, this Addon requires at least IPCop 2.1.5"
     exit 1
 fi
 

@@ -31,6 +31,7 @@ my $maxusage=0;
 my $nice='';
 my @tmp=();
 my $request='';
+my $channelId='';
 my $xlrator_url=0;
 my $source_url='';
 my $hostaddr='';
@@ -38,6 +39,7 @@ my $username='';
 my $method='';
 my $unique = 0;
 my $mirror = 1;
+my $redirectChain = 0;
 
 &UPDXLT::readhash("/var/ipcop/ethernet/settings", \%netsettings);
 
@@ -55,18 +57,48 @@ if (!$maxusage) { $maxusage=75; };
 # dotzball: check for dead downloads
 system("$apphome/bin/checkdeaddl &");
 
+foreach my $arg (@ARGV) {
+    if($arg eq "-f") {
+        $redirectChain = 1;
+    }
+}
+undef(@ARGV);
 
 while (<>) {
 
-    $request=$_;
+    $request = $_;
 
-    @tmp=split(/ /,$request);
+    if($request =~ /^\d*\s*(ERR|OK|BH)/)
+    {
+        print "$request";
+        next;
+    }
+
+    @tmp = split(/ /,$request);
     chomp(@tmp);
 
-    $source_url = $tmp[0];
-    $hostaddr   = $tmp[1]; while ($hostaddr =~ /.*\/$/) { chop $hostaddr; }
-    $username   = $tmp[2]; if ($username eq '') { $username='-'; };
-    $method     = $tmp[3];
+    my $id = 0;
+
+    if($tmp[0] =~ /^\d+$/) {
+        $channelId = $tmp[$id++]." ";
+    }
+    else {
+        $channelId = '';
+    }
+
+    $source_url = $tmp[$id++];
+
+    $hostaddr   = $tmp[$id++];
+    while ($hostaddr =~ /.*\/$/) {
+        chop $hostaddr;
+    }
+
+    $username   = $tmp[$id++];
+    if ($username eq '') {
+        $username='-';
+    }
+
+    $method     = $tmp[$id++];
 
     $xlrator_url = $source_url;
 
@@ -159,9 +191,27 @@ while (<>) {
 
     }
 
-    $request="$xlrator_url $hostaddr $username $method\n";
+    if($xlrator_url eq $source_url)
+    {
+        # Nothing changed/no redirect
+        if($redirectChain)
+        {
+            # There are more redirectors to come, print original request
+            $request = "$source_url $hostaddr $username $method";
+        }
+        else
+        {
+            # No more redirectors to come, print answer in squid format
+            $request = "ERR";
+        }
+    }
+    else
+    {
+        # Found a redirect, print answer always(!) in squid format
+        $request = "OK rewrite-url=\"$xlrator_url\"";
+    }
 
-    print $request;
+    print "$channelId$request\n";
 }
 
 # -------------------------------------------------------------------
