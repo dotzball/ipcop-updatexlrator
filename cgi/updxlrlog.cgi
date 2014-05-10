@@ -96,7 +96,7 @@ if ($cgiparams{'ACTION'} eq $Lang::tr{'restore defaults'}) {
     $cgiparams{'SOURCE_IP'}     = 'ALL';
 	$cgiparams{'RESPONSE_CODE'}     = 'ALL';
 	$cgiparams{'VENDOR'}     = 'ALL';
-    $cgiparams{'FILTER'}        = "[.](gif|jpeg|jpg|png|css|js)\$";
+    $cgiparams{'FILTER'}        = "";
     $cgiparams{'ENABLE_FILTER'} = 'on';
 	$cgiparams{'INCLUDE_FILTER'}        = "";
     $cgiparams{'ENABLE_INCLUDE_FILTER'} = 'off';
